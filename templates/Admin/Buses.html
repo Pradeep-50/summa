@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: content}">
+<div class="buses-container">
+    <h2 class="nex-brand-gradient">Bus Fleet Management</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="btn-group">
+            <button class="btn btn-outline-primary">Export</button>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#bulkUploadBusesModal">Bulk Upload</button>
+        </div>
+        <button class="btn btn-nex-primary" data-bs-toggle="modal" data-bs-target="#addBusModal">Add Bus</button>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card-body text-center">
+                <p class="text-muted">Total Buses</p>
+                <h3 id="total-buses">0</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-body text-center">
+                <p class="text-muted">Active Buses</p>
+                <h3 id="active-buses">0</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-body text-center">
+                <p class="text-muted">Maintenance</p>
+                <h3 id="maintenance-buses">0</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-body text-center">
+                <p class="text-muted">Out of Service</p>
+                <h3 id="out-of-service-buses">0</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <h5>Bus Fleet</h5>
+        <div class="btn-group mb-3">
+            <button class="btn btn-outline-primary bus-filter" data-filter="all">All</button>
+            <button class="btn btn-outline-primary bus-filter" data-filter="ac">AC</button>
+            <button class="btn btn-outline-primary bus-filter" data-filter="non-ac">Non-AC</button>
+            <button class="btn btn-outline-primary bus-filter" data-filter="sleeper">Sleeper</button>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Bus ID</th>
+                    <th>Registration</th>
+                    <th>Type</th>
+                    <th>Capacity</th>
+                    <th>Assigned Route</th>
+                    <th>Last Service</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="buses-table">
+                <tr><td colspan="8">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h5>Real-Time Bus Tracking</h5>
+            <div class="card-body">
+                <div id="bus-tracking-map" style="height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

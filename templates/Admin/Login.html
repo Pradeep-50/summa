@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::head}, ~{::content})}">
+<head>
+    <title>Login - NexBus Admin</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #0d47a1, #1976d2);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        .login-card {
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.6s ease-out;
+            overflow: hidden;
+        }
+        .login-card .card-header {
+            background: linear-gradient(90deg, #1976d2, #2196f3);
+            color: white;
+            border: none;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+        .login-card .card-body {
+            padding: 2rem;
+        }
+        .input-group-text {
+            background: #e3f2fd;
+            border: none;
+            border-radius: 10px 0 0 10px;
+        }
+        .form-control {
+            border-radius: 0 10px 10px 0;
+            border: 1px solid #bbdefb;
+            padding: 0.75rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .form-control:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+        }
+        .btn-primary {
+            background: #1976d2;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-weight: 500;
+            transition: background 0.3s, transform 0.2s;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+        }
+        .alert {
+            border-radius: 10px;
+            animation: shake 0.3s ease-in-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        @media (max-width: 576px) {
+            .login-card {
+                margin: 1rem;
+            }
+            .login-card .card-header {
+                font-size: 1.5rem;
+                padding: 1rem;
+            }
+            .login-card .card-body {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card login-card">
+                        <div class="card-header">
+                            <i class="fas fa-bus-alt me-2"></i>NexBus Admin
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert" th:text="${error}">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            <form th:action="@{/login}" th:object="${loginRequest}" method="post">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                        <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Enter your email" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                        <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="Enter your password" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Sign In</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

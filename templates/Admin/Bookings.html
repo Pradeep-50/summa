@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::head}, ~{::content}, ~{::scripts})}">
+<head>
+    <title th:text="${pageTitle}"></title>
+</head>
+<body>
+    <div th:fragment="content">
+        <h2>Bookings</h2>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <table id="bookings-table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Passenger</th>
+                    <th>Route</th>
+                    <th>Departure</th>
+                    <th>Seat</th>
+                    <th>Fare</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="booking : ${bookings}">
+                    <td th:text="${booking.bookingId}"></td>
+                    <td th:text="${booking.userId}"></td>
+                    <td th:text="${booking.busId}"></td>
+                    <td th:text="${booking.bookingDate}"></td>
+                    <td th:text="${booking.seatId}"></td>
+                    <td th:text="'₹' + ${booking.fare}"></td>
+                    <td th:text="${booking.status}"></td>
+                    <td>
+                        <form th:action="@{/api/bookings/{id}/cancel(id=${booking.bookingId})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Cancel</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <form id="new-booking-form" th:action="@{/api/bookings}" method="post">
+            <div class="form-group">
+                <label for="busId">Bus ID</label>
+                <input type="number" id="bookingBus" name="busId" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="userId">User ID</label>
+                <input type="number" id="bookingUser" name="userId" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="seatId">Seat ID</label>
+                <input type="number" id="bookingSeatNumber" name="seatId" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="scheduleId">Schedule ID</label>
+                <input type="number" id="bookingSchedule" name="scheduleId" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="bookingDate">Booking Date</label>
+                <input type="datetime-local" id="bookingDepartureDate" name="bookingDate" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="fare">Fare</label>
+                <input type="number" id="bookingFare" name="fare" class="form-control" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="bookingStatus" name="status" class="form-control" required>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Booking</button>
+        </form>
+    </div>
+    <th:block th:fragment="scripts">
+        <script>
+            window.authToken = '[[${authToken}]]';
+            sessionStorage.setItem('authToken', window.authToken);
+        </script>
+    </th:block>
+</body>
+</html>

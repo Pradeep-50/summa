@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile</title>
+    <link rel="stylesheet" th:href="@{/css/signupLogin.css}" />
+    <link rel="stylesheet" th:href="@{/css/leftpanel.css}" />
+    <link rel="stylesheet" th:href="@{/css/myProfile.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+<body>
+    <header id="rh_header" class="home-only-header fixer1">
+        <div id="headerBlock">
+            <article class="container">
+                <nav class="leftNav">
+                    <section>
+                        <div class="logo">
+                            <a th:href="@{/html/homePage}"><img th:src="@{/image/logo.png}" alt="Nex-Bus" /></a>
+                        </div>
+                        <div class="leftmenu"></div>
+                    </section>
+                </nav>
+                <nav class="rightNav">
+                    <ul>
+                        <li><a th:href="@{/html/help}">Help</a></li>
+                        <li>
+                            <a href="#" id="dropup-menu-booking">Manage Booking
+                                <span><i class="fas fa-chevron-down"></i></span>
+                            </a>
+                            <div class="dropdown-menu-booking">
+                                <div>
+                                    <a class="dropdown-item" th:href="@{/html/cancelTicket}">Cancel Ticket</a><br />
+                                    <a class="dropdown-item" th:href="@{/html/showTicket}">Show My Ticket</a><br />
+                                    <a class="dropdown-item" th:href="@{/html/changeTravelDate}">Change Travel Date</a><br />
+                                </div>
+                            </div>
+                        </li>
+                        <li id="Signup">
+                            <a href="#" id="dropup-menu">
+                                <span><i class="far fa-user-circle"></i></span>
+                                <span><i class="fas fa-chevron-down after_user_circle"></i></span>
+                            </a>
+                            <div class="dropdown-menu">
+                                <div class="drop">
+                                    <a class="dropdown-item" th:href="@{/html/myTrips}">My Trips</a><br />
+                                    <a class="dropdown-item" th:href="@{/html/wallets}">Wallets</a><br />
+                                    <a class="dropdown-item" th:href="@{/html/myProfile}">My Profile</a><br />
+                                    <a class="dropdown-item" th:href="@{/index}">Sign Out</a><br />
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </article>
+        </div>
+    </header>
+
+    <div class="boxContainer">
+        <div class="leftPanel">
+            <a th:href="@{/html/myProfile}">
+                <img src="https://cdn-icons-png.flaticon.com/128/1246/1246351.png" alt="User" />
+                <div>
+                    <h3 id="UserNameleftPanel"></h3>
+                </div>
+            </a>
+            <a th:href="@{/html/myTrips}" id="mytrip">
+                <img src="https://cdn-icons-png.flaticon.com/128/1241/1241874.png" alt="Trips" />
+                <div>
+                    <h3>My Trips</h3>
+                </div>
+            </a>
+            <a th:href="@{/html/wallets}" id="wallet">
+                <img src="https://cdn-icons-png.flaticon.com/128/1235/1235458.png" alt="Wallet" />
+                <div>
+                    <h3>Wallet/Cards</h3>
+                </div>
+            </a>
+        </div>
+
+        <div id="rightPanel_section">
+            <div class="right-panel">
+                <span class="greyText">My Profile</span>
+                <div class="profiledetails">
+                    <div class="editbutton" id="editbutton">
+                        <button id="edittap">EDIT</button>
+                    </div>
+                    <div class="userdetail1">
+                        <div class="inputName">
+                            <div>
+                                <label for="YOUR NAME">YOUR NAME</label><br />
+                                <div id="nameUserPrint"></div>
+                            </div>
+                            <div>
+                                <label for="DATE OF BIRTH">DATE OF BIRTH</label><br />
+                                <div id="datePrint"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="userdetail2">
+                        <p>GENDER</p>
+                        <div id="genderPrint"></div>
+                    </div>
+                    <fieldset>
+                        <legend>CONTACT DETAILS</legend>
+                    </fieldset>
+                    <div class="userdetail3">
+                        <div>
+                            <label for="EMAIL">EMAIL</label>
+                            <div id="emailPrint"></div>
+                        </div>
+                        <div>
+                            <label for="NUMBER">NUMBER</label>
+                            <div id="numberPrint"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-paneltwo" style="display: none;">
+                <span class="greyText">Edit Profile</span>
+                <div class="profiledetails">
+                    <div class="editbutton">
+                        <button id="cancelbutton">CANCEL</button>
+                        <button id="savebutton">SAVE</button>
+                    </div>
+                    <div class="userdetail1">
+                        <div class="inputName">
+                            <div>
+                                <label for="YOUR NAME">YOUR NAME</label><br />
+                                <input type="text" id="userName" />
+                            </div>
+                            <div>
+                                <label for="DATE OF BIRTH">DATE OF BIRTH</label><br />
+                                <input type="date" id="date" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="userdetail2">
+                        <label for="GENDER">GENDER</label><br />
+                        <select id="gender">
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <fieldset>
+                        <legend>CONTACT DETAILS</legend>
+                    </fieldset>
+                    <div class="userdetail3">
+                        <div>
+                            <label for="EMAIL">EMAIL</label>
+                            <input type="email" id="email" />
+                        </div>
+                        <div>
+                            <label for="NUMBER">NUMBER</label>
+                            <div id="numberPrint2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{https://unpkg.com/sweetalert/dist/sweetalert.min.js}"></script>
+    <script type="module" th:src="@{/js/pages.js}"></script>
+    <script th:src="@{/js/myProfile.js}"></script>
+</body>
+</html>

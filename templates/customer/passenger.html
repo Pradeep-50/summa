@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Passenger Details</title>
+    <link rel="stylesheet" th:href="@{/css/passengerDetails.css}" />
+    <link rel="stylesheet" th:href="@{/css/passenger.css}" />
+    <style>
+      .button-container {
+        background-color: yellow;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="main_container">
+      <div id="container">
+        <div class="passenger_details">
+          <h2>Passenger Details</h2>
+        </div>
+        <div class="passenger_information">
+          <img th:src="@{/image/userLogo.png}" alt="logo" />
+          <span>Passenger Information</span>
+        </div>
+
+        <!-- passenger 1 details -->
+        <div class="box1">
+          <div class="class1">
+            <span>Passenger 1   | </span>
+            <span class="seat" th:text="${bookingDetails.booked_seatID}">seat L17</span>
+          </div>
+          <div class="name">
+            <label for="inputName">Name</label>
+            <input id="inputName" type="text" placeholder="Name" th:value="${bookingDetails.name}" />
+          </div>
+
+          <div id="box">
+            <div>
+              <div class="gender">
+                <label>Gender</label>
+              </div>
+              <div class="gender_bottom">
+                <div>
+                  <input
+                    class="genderName"
+                    type="radio"
+                    name="gender"
+                    value="M"
+                    th:checked="${bookingDetails.gender == 'M'}"
+                  />
+                  <label>Male</label>
+                </div>
+                <div>
+                  <input
+                    class="genderName"
+                    type="radio"
+                    name="gender"
+                    value="F"
+                    th:checked="${bookingDetails.gender == 'F'}"
+                  />
+                  <label>Female</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- age -->
+            <div>
+              <div class="age">
+                <label for="input" class="age1">Age</label>
+                <input id="input" type="text" name="age" placeholder="Age" th:value="${bookingDetails.age}" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- contact Details -->
+        <div id="contactDetails">
+          <img
+            id="img"
+            th:src="@{/image/contactDetail.png}"
+            alt="contactDetails"
+          />
+          <span>   <b>Contact Details</b></span>
+        </div>
+
+        <!-- email and phone numbers -->
+        <div id="emailBox">
+          <div class="ticket">Your ticket will be sent to these details</div>
+          <div class="email">
+            <label for="email">Email ID</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email addresses"
+              th:value="${bookingDetails.email}"
+            />
+          </div>
+          <div class="phone">
+            <div>
+              <label for="phoneNumber">Phone</label>
+            </div>
+            <div class="phoneNo">
+              <div class="border">+91  </div>
+              <input
+                id="phoneNumber"
+                type="number"
+                name="phone"
+                placeholder="Phone Number"
+                th:value="${bookingDetails.phone}"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- GST Number -->
+        <div class="passenger_info_content_block clearfix">
+          <div class="rucDetails_block">
+            <div>
+              <label class="rucLabel checkbox_css">
+                <input
+                  type="checkbox"
+                  id="RUCFeature"
+                  class="input-checkbox hide"
+                  th:checked="${bookingDetails.hasGstNumber}"
+                />
+                <label
+                  for="RUCFeature"
+                  id="RUCFeatureCheckBox"
+                  class="checkmark"
+                ></label>
+                <span class="ruc-txt">I have a GST number (optional)?</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="whatsApp_block">
+          <label class="checkbox_css">
+            <input
+              type="checkbox"
+              id="whatsAppFeature"
+              class="input-checkbox hide"
+              th:checked="${bookingDetails.sendWhatsAppUpdates}"
+            />
+            <label
+              for="whatsAppFeature"
+              id="whatsAppFeatureCheckBox"
+              class="checkmark"
+            ></label>
+            <span class="icon-whatsApp"></span>
+            <span class="subscribe-txt">Send booking details and updates on WhatsApp number</span>
+          </label>
+        </div>
+
+        <div></div>
+        <div>
+          <div class="insurance-block" id="travel-ins">
+            <div class="insurance-msg">
+              <div class="rap_heading">
+                <div class="bcp_tcp_title">
+                  <img
+                    th:src="@{/image/bus.png}"
+                    alt="img"
+                    width="40px"
+                  />Nex-Bus Assurance Program
+                </div>
+                <div class="rap_link_div">
+                </div>
+              </div>
+              <div class="insurance_new_subtitle">
+                Secure your trip just at
+                <span class="insurance_new_subtitle_1">₹ 17 </span>per passenger
+              </div>
+            </div>
+            <div class="benefits-block">
+              <div>
+                <img
+                  class="benefits-img"
+                  width="70px"
+                  height="70px"
+                  th:src="@{/image/bus_cancellation.png}"
+                />
+                <div class="benefits-title">Upto ₹ 500</div>
+                <div class="benefits-desc">extra refund on ticket price if the bus is cancelled.</div>
+              </div>
+              <div>
+                <img
+                  class="benefits-img"
+                  width="70px"
+                  height="70px"
+                  th:src="@{/image/hospital.png}"
+                />
+                <div class="benefits-title">Upto ₹ 75,000</div>
+                <div class="benefits-desc">in the event of accidental hospitalisation</div>
+              </div>
+              <div>
+                <img
+                  class="benefits-img"
+                  width="70px"
+                  height="70px"
+                  th:src="@{/images/accident.png}"
+                />
+                <div class="benefits-title">Upto ₹ 5Lakh</div>
+                <div class="benefits-desc">in case of death/PTD/PPD</div>
+              </div>
+            </div>
+            <div class="insurance_container">
+              <div class="bottomRow insurance-radio">
+                <label class="ins-container">
+                  <span>Yes, Protect my trip at </span>
+                  <span class="ins_price">₹ 17</span>
+                  <span class="noOfPsng">(1 passenger)</span>, I agree to the
+                  <input
+                    type="radio"
+                    id="insuranceOpted_rap"
+                    class="policyCheckBox policyCheckBoxtrueradio"
+                    name="policyCheckBox"
+                    value="yes"
+                    th:checked="${bookingDetails.insuranceOpted}"
+                  />
+                  <span class="checkmark-radio"></span>
+                </label>
+                <label class="ins-container">
+                  No, I would like to proceed without insurance
+                  <input
+                    type="radio"
+                    id="insuranceNotOpted_rap"
+                    class="policyCheckBox policyCheckBoxfalseradio"
+                    name="policyCheckBox"
+                    value="no"
+                    th:checked="${!bookingDetails.insuranceOpted}"
+                  />
+                  <span class="checkmark-radio"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="addOn_block">
+          <div class="addOnTitle clearfix">
+            <span class="fl p-title">Nex-Bus Cares: your contribution makes a difference!</span>
+          </div>
+          <label class="checkbox_css">
+            <div class="displayFlex">
+              <div>
+                <input
+                  type="checkbox"
+                  id="addOnFeature"
+                  class="input-checkbox hide"
+                  th:checked="${bookingDetails.donateToCharity}"
+                />
+                <label
+                  for="addOnFeature"
+                  id="addOnFeatureCheckBox"
+                  class="checkmark"
+                ></label>
+              </div>
+              <div class="icon-red_care"></div>
+              <div class="subscribe-txt">
+                Donate ₹5 for COVID-19 Relief and Other Charity Initiatives.
+              </div>
+            </div>
+          </label>
+          <div class="moreTnc-tooltip displayFlex">
+            <span>Know more</span>
+            <span>
+              <ul class="addOnTnc">
+                <li class="addOnList">
+                  <span lang="EN-US">
+                    The amount received as donation will be used for charitable causes. Nex-Bus will donate the collected amount to MakeMyTrip Foundation (a public trust registered with charitable objects) or such other similar charitable organizations to help create a social impact.
+                  </span>
+                </li>
+                <li class="addOnList">
+                  <span lang="EN-US">
+                    The contributions made will be refunded in case of cancellation of tickets.
+                  </span>
+                </li>
+                <li class="addOnList">
+                  <span lang="EN-US">
+                    You hereby voluntarily choose to contribute to the social cause and by proceeding to donate the money, you do so at own risk and expressly waive any and all claims, rights of action and/or remedies (under law or otherwise) that you may have against Nex-Bus arising out of or in connection with the aforesaid transaction.
+                  </span>
+                </li>
+                <li class="addOnList">
+                  <span lang="EN-US">
+                    By proceeding to donate the money, You understand and confirm that this donation is not from any foreign source as defined under Foreign Contribution Regulation Act, 2010.
+                  </span>
+                </li>
+                <li class="addOnList">
+                  No certificate under Section 80G of the Income Tax Act, 1961 will be issued.
+                </li>
+                <li class="addOnList">
+                  In case of any queries, kindly reach out at "Help"/"Support" section of Nex-Bus.
+                </li>
+              </ul>
+            </span>
+          </div>
+        </div>
+
+        <div class="clearfix continue-booking withpptclink">
+          <div class="pptnc-link">
+            By clicking on proceed, I agree that I have read and understood the
+            <a th:href="@{/info/termscondition}" target="_blank">TnCs</a> and the
+            <a th:href="@{/info/privacypolicy}" target="_blank">Privacy Policy</a>
+          </div>
+          <div class="pR">
+            <div class="booking-amt-details fl clearfix f-bold">
+              <div class="booking-amt-title fl">Total Amount :</div>
+              <div class="booking-amt fl">
+                INR<span id="tot_price" class="f-bold" th:text="${bookingDetails.tot_price}">1500.00</span>
+              </div>
+            </div>
+
+            <div class="button-container fr">
+              <button
+                id="submit_btn"
+                onclick="postData()"
+                class="button main-btn gtm-continueBooking"
+              >
+                Proceed to pay
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:src="@{/js/passengerDetails.js}"></script>
+  </body>
+</html>

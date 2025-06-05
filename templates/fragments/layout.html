@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} ?: 'Nex-Bus Admin'">Nex-Bus Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.4/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <h1><span class="nex-brand-gradient">Nex-Bus</span>Admin Portal</h1>
+    </header>
+
+    <div class="container-main">
+        <div class="card">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand nex-brand-gradient" href="#">Nex-Bus</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link" th:href="@{/dashboard}">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/routes}">Routes</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/buses}">Buses</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/passengers}">Passengers</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/operators}">Operators</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/bookings}">Bookings</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/support}">Support Tickets</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/analytics}">Analytics</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/audit}">Audit Logs</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/profile}">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Sign out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div th:insert="~{::content}"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 Nex-Bus. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>

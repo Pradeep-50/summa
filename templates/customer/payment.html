@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAYMENT PAGE</title>
+  <link rel="stylesheet" th:href="@{/css/payment.css}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+<body>
+  <section id="rh_main">
+    <div id="sticky_phantom" class="hide"></div>
+
+    <header id="rh_header" class="home-only-header fixer1">
+      <div id="headerBlock">
+        <article class="container">
+          <nav class="leftNav">
+            <section>
+              <div class="logo">
+                <a th:href="@{/html/homePage}"><img th:src="@{/image/logo.png}" alt="Nex-Bus" /></a>
+              </div>
+              <div class="leftmenu"></div>
+            </section>
+          </nav>
+          <nav class="rightNav">
+            <ul>
+              <li><a th:href="@{/html/help}">Help</a></li>
+              <li>
+                <a href="#" id="dropup-menu-booking">Manage booking
+                  <span><i class="fas fa-chevron-down"></i></span>
+                </a>
+                <div class="dropdown-menu-booking">
+                  <div>
+                    <a class="dropdown-item" th:href="@{/html/cancelTicket}">Cancel Ticket</a><br />
+                    <a class="dropdown-item" th:href="@{/html/showTicket}">Show My Ticket</a><br />
+                    <a class="dropdown-item" th:href="@{/html/changeTravelDate}">Change Travel Date</a><br />
+                  </div>
+                </div>
+              </li>
+              <li id="Signup">
+                <a href="#" id="dropup-menu">
+                  <span><i class="far fa-user-circle"></i></span>
+                  <span><i class="fas fa-chevron-down after_user_circle"></i></span>
+                </a>
+                <div class="dropdown-menu">
+                  <div class="drop">
+                    <a class="dropdown-item" th:href="@{/html/myTrips}">My Trips</a><br />
+                    <a class="dropdown-item" th:href="@{/html/wallets}">Wallets</a><br />
+                    <a class="dropdown-item" th:href="@{/html/myProfile}">My Profile</a><br />
+                    <a class="dropdown-item" th:href="@{/index}">Sign Out</a><br />
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </nav>
+        </article>
+      </div>
+    </header>
+
+    <div id="mBWrapper">
+      <div id="root">
+        <div class="full-container">
+          <div class="timer-container">
+            <div class="timer">
+              <div></div>
+              <div class="journey-info">
+                <div id="city_start" th:text="${bookingDetails.from} ?: 'From'">Pune</div>
+                <div><span class="icon-right-arrow icon"></span> ↪ </div>
+                <div id="city_end" th:text="${bookingDetails.to} ?: 'To'">Bangalore</div>
+              </div>
+              <div class="time">
+                <div class="timer-text"></div>
+                <div><img src="" /></div>
+                <div></div>
+              </div>
+            </div>
+          </div>
+          <div class="payment-container">
+            <div class="payment-container-left">
+              <div class="offer-code-container">
+                <div width="100%" height="60px" class="sc-chPdSV ddpshm">
+                  <input id="offerCode" name="offerCode" placeholder="Enter offer code" value="" />
+                  <button id="promoButton">Apply</button>
+                  <div class="sc-kgoBCf igNxVc"></div>
+                </div>
+              </div>
+              <div class="wallet-container"></div>
+              <div class="offerCodes">
+                <h3>Offer Code: NexBus30 ....<span></span>Get 30% OFF</h3>
+              </div>
+              <div class="info-banner">
+                <div class="sc-kAzzGY fAMuPp">
+                  <div class="banner-chip">
+                    <div class="banner-img">
+                      <img th:src="@{/image/payments.svg}" alt="CC" />
+                    </div>
+                    <div class="banner-text">
+                      <div>Safe and secure</div>
+                      <div>online payments</div>
+                    </div>
+                  </div>
+                  <div class="banner-chip">
+                    <div class="banner-img">
+                      <img th:src="@{/image/transactions.svg}" alt="Million Transactions" />
+                    </div>
+                    <div class="banner-text">
+                      <div>60+ million</div>
+                      <div>transactions</div>
+                    </div>
+                  </div>
+                  <div class="banner-chip">
+                    <div class="banner-img">
+                      <img th:src="@{/image/trust.svg}" alt="Reliable" />
+                    </div>
+                    <div class="banner-text">
+                      <div>10+ years of</div>
+                      <div>Trust</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="payment-instruments-container">
+                <div class="payment-instruments">
+                  <div id="pi-title-id" class="pi-title">Choose Payment Method</div>
+                  <div class="pi-wrap no-mt">
+                    <div class="pi-subtitle">Pay with Razorpay</div>
+                    <div class="pi">
+                      <div class="sc-gqjmRU kwoLib">
+                        <div class="sc-VigVT imKSDY">
+                          <div class="title-left">
+                            <div class="icon-list">
+                              <img class="icon-img" th:src="@{/image/GPayNewLogo.png}" />
+                              <img class="icon-img" th:src="@{/image/phonepe.svg}" />
+                              <img class="icon-img" th:src="@{/image/amazonpay_new.png}" />
+                            </div>
+                          </div>
+                          <div class="title-right no-padding-right">
+                            <button id="paynow" class="pay-now-button">Pay Now</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="payment-container-right">
+              <div class="journey-details-container">
+                <div class="sc-bZQynM jeiDQS">
+                  <div class="trip-container">
+                    <div class="travel-info">
+                      <div class="travel-operator-info">
+                        <div class="travel-title" id="company_name" th:text="${bookingDetails.company_name} ?: 'Bus Co.'"></div>
+                        <div class="travel-lbl" id="bus-name" th:text="${bookingDetails.bus_name} ?: 'Bus Name'"></div>
+                      </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="journey-info trip-info">
+                      <div class="trip-info-left">
+                        <div class="icon-div">
+                          <div class="cal-icon"></div>
+                        </div>
+                        <div class="trip-data">
+                          <div class="trip-lbls">Departure</div>
+                          <div class="trip-subtitle" id="date">
+                            <b style="padding-left: 10px" id="departure" th:text="${bookingDetails.date} ?: 'Date'"></b>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="trip-info-right">
+                        <div class="trip-lbls">Seats</div>
+                        <div class="trip-subtitle" style="text-align: end">
+                          <b id="seat_no" th:text="${bookingDetails.seats} ?: 'Seat'">L16</b>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="trip-info">
+                      <div class="bpdp-info-left">
+                        <div class="icon-div">
+                          <div class="loc-icon"></div>
+                        </div>
+                        <div class="trip-data">
+                          <div class="trip-lbls">Boarding Point</div>
+                          <div class="trip-subtitle"><b id="city_name" th:text="${bookingDetails.boarding_point} ?: 'Boarding'"></b></div>
+                          <div class="trip-subtitle" style="text-align: start">PRADHIKARAN, OPP AKURDI RAILWAY STATION. (M)</div>
+                        </div>
+                      </div>
+                      <div class="bpdp-info-right">
+                        <div class="trip-lbls">Dropping Point</div>
+                        <div class="trip-subtitle"><b id="city_end1" th:text="${bookingDetails.to} ?: 'To'"></b></div>
+                        <div class="trip-subtitle" style="text-align: end">Nelamangala</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="passengers-list">
+                    <div class="passengers-item">
+                      <div class="passengers-info">
+                        <div class="icon-div">
+                          <div class="passengers-info-icon"></div>
+                        </div>
+                        <div class="passengers-name" id="name_age" th:text="${bookingDetails.name_age} ?: 'Passenger'"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="hotDealOffer-container"></div>
+              <div class="fare-breakup-container">
+                <div title="FARE BREAKUP" class="sc-ifAKCX bzMtLr">
+                  <div class="sc-EHOje givbgs">
+                    <div class="title">
+                      <div>FARE BREAKUP</div>
+                      <div class="expand-icon">
+                        <img th:src="@{/image/down.svg}" width="14" height="14" />
+                      </div>
+                    </div>
+                    <div>
+                      <div class="fareBreakupComp">
+                        <div>Onward Fare</div>
+                        <div id="total_price1" th:text="'₹' + (${bookingDetails.total_price} ?: '0')"></div>
+                      </div>
+                      <div class="fareBreakupComp">
+                        <div>Discount</div>
+                        <div id="discount">₹0</div>
+                      </div>
+                      <div class="fareBreakupComp">
+                        <div class="breakup-lbl">Total Payable</div>
+                        <div class="breakup-lbl" id="total_price" th:text="'₹' + (${bookingDetails.total_price} ?: '0')"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" id="rzp_key_id" th:value="${env.getProperty('razorpay.key.id')}" />
+        <script src="https://checkout.razorpay/v1/checkout.js"></script>
+        <script th:src="@{https://unpkg.com/sweetalert/dist/sweetalert.min.js}"></script>
+        <script th:src="@{/js/payment.js}"></script>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

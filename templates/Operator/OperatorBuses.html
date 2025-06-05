@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Manage Buses</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="mb-2">Manage Buses</h1>
+    <p class="text-muted mb-3">View and manage your buses.</p>
+    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addBusModal">
+        <i class="fas fa-plus me-2"></i>Add Bus
+    </button>
+    <div id="loadingSpinner" class="spinner-border text-primary d-none" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert"></div>
+    <div class="row g-3" id="busContainer" th:each="bus : ${buses}">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Bus #<span th:text="${bus.id}"></span></h5>
+                    <p><strong>Number:</strong> <span th:text="${bus.busNumber}"></span></p>
+                    <p><strong>Route:</strong> <span th:text="${bus.routeId != null} ? ${bus.routeId} : 'None'"></span></p>
+                    <p><strong>Seats:</strong> <span th:text="${bus.totalSeats}"></span></p>
+                    <p><strong>Amenities:</strong> <span th:text="${bus.amenities != null} ? ${bus.amenities} : 'None'"></span></p>
+                    <button class="btn btn-warning btn-sm me-2" th:onclick="'openUpdateBusModal(\'' + ${bus.id} + '\')'">Edit</button>
+                    <button class="btn btn-danger btn-sm me-2" th:onclick="'deleteBus(\'' + ${bus.id} + '\')'">Delete</button>
+                    <button class="btn btn-primary btn-sm me-2" th:onclick="'openAssignRouteModal(\'' + ${bus.id} + '\')'">Assign Route</button>
+                    <button class="btn btn-primary btn-sm" th:onclick="'openAssignAmenityModal(\'' + ${bus.id} + '\')'">Assign Amenity</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bus Modal -->
+    <div class="modal fade" id="addBusModal" tabindex="-1" aria-labelledby="addBusModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBusModalLabel">Add Bus</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addBusForm" th:action="@{/buses/add}" method="post">
+                        <div class="mb-3">
+                            <label for="busNumber" class="form-label">Bus Number</label>
+                            <input type="text" class="form-control" id="busNumber" name="busNumber" required aria-describedby="busNumberFeedback"/>
+                            <div id="busNumberFeedback" class="invalid-feedback">Bus number is required.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="busRouteId" class="form-label">Route</label>
+                            <select class="form-control" id="busRouteId" name="routeId" aria-describedby="busRouteIdFeedback">
+                                <option value="">Select a route</option>
+                                <option th:each="route : ${routes}" th:value="${route.id}" th:text="${route.name}"></option>
+                            </select>
+                            <div id="busRouteIdFeedback" class="invalid-feedback">Please select a route.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="totalSeats" class="form-label">Total Seats</label>
+                            <input type="number" class="form-control" id="totalSeats" name="totalSeats" required min="1" aria-describedby="totalSeatsFeedback"/>
+                            <div id="totalSeatsFeedback" class="invalid-feedback">Enter a positive number of seats.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Add Bus</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Bus Modal -->
+    <div class="modal fade" id="updateBusModal" tabindex="-1" aria-labelledby="updateBusModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateBusModalLabel">Update Bus</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateBusForm" th:action="@{/buses/update}" method="post">
+                        <input type="hidden" id="updateBusId" name="id"/>
+                        <div class="mb-3">
+                            <label for="updateBusNumber" class="form-label">Bus Number</label>
+                            <input type="text" class="form-control" id="updateBusNumber" name="busNumber" required aria-describedby="updateBusNumberFeedback"/>
+                            <div id="updateBusNumberFeedback" class="invalid-feedback">Bus number is required.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateBusRouteId" class="form-label">Route</label>
+                            <select class="form-control" id="updateBusRouteId" name="routeId" aria-describedby="updateBusRouteIdFeedback">
+                                <option value="">Select a route</option>
+                                <option th:each="route : ${routes}" th:value="${route.id}" th:text="${route.name}"></option>
+                            </select>
+                            <div id="updateBusRouteIdFeedback" class="invalid-feedback">Please select a route.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateTotalSeats" class="form-label">Total Seats</label>
+                            <input type="number" class="form-control" id="updateTotalSeats" name="totalSeats" required min="1" aria-describedby="updateTotalSeatsFeedback"/>
+                            <div id="updateTotalSeatsFeedback" class="invalid-feedback">Enter a positive number of seats.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update Bus</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Amenity Modal -->
+    <div class="modal fade" id="assignAmenityModal" tabindex="-1" aria-labelledby="assignAmenityModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignAmenityModalLabel">Assign Amenity</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="assignAmenityForm" th:action="@{/buses/assign-amenity}" method="post">
+                        <input type="hidden" id="assignAmenityBusId" name="busId"/>
+                        <div class="mb-3">
+                            <label for="amenityId" class="form-label">Amenity</label>
+                            <select class="form-control" id="amenityId" name="amenityId" required aria-describedby="amenityIdFeedback">
+                                <option value="">Select an amenity</option>
+                                <option th:each="amenity : ${amenities}" th:value="${amenity.id}" th:text="${amenity.name}"></option>
+                            </select>
+                            <div id="amenityIdFeedback" class="invalid-feedback">Please select an amenity.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Assign</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Route Modal -->
+    <div class="modal fade" id="assignRouteModal" tabindex="-1" aria-labelledby="assignRouteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignRouteModalLabel">Assign Route</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="assignRouteForm" th:action="@{/buses/assign-route}" method="post">
+                        <input type="hidden" id="assignRouteBusId" name="busId"/>
+                        <div class="mb-3">
+                            <label for="assignRouteId" class="form-label">Route</label>
+                            <select class="form-control" id="assignRouteId" name="routeId" required aria-describedby="assignRouteIdFeedback">
+                                <option value="">Select a route</option>
+                                <option th:each="route : ${routes}" th:value="${route.id}" th:text="${route.name}"></option>
+                            </select>
+                            <div id="assignRouteIdFeedback" class="invalid-feedback">Please select a route.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Assign</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="scripts">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchBuses();
+            document.getElementById('addBusForm').addEventListener('submit', addBus);
+            document.getElementById('updateBusForm').addEventListener('submit', updateBus);
+            document.getElementById('assignAmenityForm').addEventListener('submit', assignAmenity);
+            document.getElementById('assignRouteForm').addEventListener('submit', assignRouteToBus);
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="modals">
+    <!-- Add Route Modal -->
+    <div class="modal fade" id="addRouteModal" tabindex="-1" aria-labelledby="addRouteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRouteModalLabel">Add New Route</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-route-form">
+                        <div class="mb-3">
+                            <label for="routeName" class="form-label">Route Name</label>
+                            <input type="text" class="form-control" id="routeName" required>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="sourceCity" class="form-label">Source City</label>
+                                <input type="text" class="form-control" id="sourceCity" required>
+                            </div>
+                            <div class="col">
+                                <label for="destinationCity" class="form-label">Destination City</label>
+                                <input type="text" class="form-control" id="destinationCity" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="distance" class="form-label">Distance (km)</label>
+                                <input type="number" class="form-control" id="distance" required>
+                            </div>
+                            <div class="col">
+                                <label for="duration" class="form-label">Duration (hrs)</label>
+                                <input type="number" class="form-control" id="duration" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="baseFare" class="form-label">Base Fare (₹)</label>
+                            <input type="number" class="form-control" id="baseFare" required>
+                        </div>
+                        <button type="submit" class="btn btn-nex-primary">Save Route</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Upload Routes Modal -->
+    <div class="modal fade" id="bulkUploadRoutesModal" tabindex="-1" aria-labelledby="bulkUploadRoutesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bulkUploadRoutesModalLabel">Bulk Upload Routes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Upload a CSV file with columns: name,source,destination,distance,duration,fare</p>
+                    <input type="file" class="form-control" id="bulkUploadRoutesFile" accept=".csv">
+                    <button class="btn btn-nex-primary mt-3" onclick="uploadRoutes()">Upload</button>
+                    <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bus Modal -->
+    <div class="modal fade" id="addBusModal" tabindex="-1" aria-labelledby="addBusModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBusModalLabel">Add New Bus</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-bus-form">
+                        <div class="mb-3">
+                            <label for="operator" class="form-label">Operator</label>
+                            <select class="form-control" id="operator" required>
+                                <option value="">Select operator</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="busRegistration" class="form-label">Bus Registration Number</label>
+                            <input type="text" class="form-control" id="busRegistration" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="busType" class="form-label">Bus Type</label>
+                            <select class="form-control" id="busType" required>
+                                <option value="">Select type</option>
+                                <option value="AC Sleeper">AC Sleeper</option>
+                                <option value="AC Seater">AC Seater</option>
+                                <option value="Non-AC Sleeper">Non-AC Sleeper</option>
+                                <option value="Non-AC Seater">Non-AC Seater</option>
+                            </select>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="totalSeats" class="form-label">Total Seats</label>
+                                <input type="number" class="form-control" id="totalSeats" required>
+                            </div>
+                            <div class="col">
+                                <label for="assignedRoute" class="form-label">Assigned Route</label>
+                                <select class="form-control" id="assignedRoute">
+                                    <option value="">Select route</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="scheduleTime" class="form-label">Schedule Time</label>
+                            <input type="datetime-local" class="form-control" id="scheduleTime" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="maintenanceCost" class="form-label">Maintenance Cost (₹)</label>
+                            <input type="number" class="form-control" id="maintenanceCost" required>
+                        </div>
+                        <button type="submit" class="btn btn-nex-primary">Add Bus</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Upload Buses Modal -->
+    <div class="modal fade" id="bulkUploadBusesModal" tabindex="-1" aria-labelledby="bulkUploadBusesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bulkUploadBusesModalLabel">Bulk Upload Buses</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Upload a CSV file with columns: operator,registration,type,seats,route,schedule,maintenanceCost</p>
+                    <input type="file" class="form-control" id="bulkUploadBusesFile" accept=".csv">
+                    <button class="btn btn-nex-primary mt-3" onclick="uploadBuses()">Upload</button>
+                    <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Passenger Modal -->
+    <div class="modal fade" id="addPassengerModal" tabindex="-1" aria-labelledby="addPassengerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPassengerModalLabel">Add New Passenger</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-passenger-form">
+                        <div class="mb-3">
+                            <label for="passengerName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="passengerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="passengerContact" class="form-label">Contact</label>
+                            <input type="text" class="form-control" id="passengerContact" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="passengerEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="passengerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="passengerPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="passengerPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-nex-primary">Add Passenger</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Operator Modal -->
+    <div class="modal fade" id="addOperatorModal" tabindex="-1" aria-labelledby="addOperatorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addOperatorModalLabel">Add New Operator</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-operator-form">
+                        <div class="mb-3">
+                            <label for="operatorName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="operatorName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="operatorContact" class="form-label">Contact</label>
+                            <input type="text" class="form-control" id="operatorContact" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="operatorEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="operatorEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="operatorPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="operatorPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="operatorRole" class="form-label">Role</label>
+                            <select class="form-control" id="operatorRole" required>
+                                <option value="BUSOPERATOR">Operator</option>
+                                <option value="ADMIN">Admin</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-nex-primary">Add Operator</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Booking Modal -->
+    <div class="modal fade" id="newBookingModal" tabindex="-1" aria-labelledby="newBookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newBookingModalLabel">New Booking</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="new-booking-form">
+                        <div class="mb-3">
+                            <label for="bookingPassengerName" class="form-label">Passenger Name</label>
+                            <input type="text" class="form-control" id="bookingPassengerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookingBus" class="form-label">Bus</label>
+                            <select class="form-control" id="bookingBus" required>
+                                <option value="">Select bus</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookingSeatNumber" class="form-label">Seat Number</label>
+                            <input type="text" class="form-control" id="bookingSeatNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookingDepartureDate" class="form-label">Departure Date</label>
+                            <input type="datetime-local" class="form-control" id="bookingDepartureDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookingPaymentMethod" class="form-label">Payment Method</label>
+                            <select class="form-control" id="bookingPaymentMethod" required>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="Net Banking">Net Banking</option>
+                                <option value="UPI">UPI</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-nex-primary">Book Now</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Support Ticket Modal -->
+    <div class="modal fade" id="newTicketModal" tabindex="-1" aria-labelledby="newTicketModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newTicketModalLabel">New Support Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="new-ticket-form">
+                        <div class="mb-3">
+                            <label for="ticketPassengerName" class="form-label">Passenger Name</label>
+                            <input type="text" class="form-control" id="ticketPassengerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ticketIssue" class="form-label">Issue Description</label>
+                            <textarea class="form-control" id="ticketIssue" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ticketPriority" class="form-label">Priority</label>
+                            <select class="form-control" id="ticketPriority" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-nex-primary">Submit Ticket</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-profile-form">
+                        <div class="mb-3">
+                            <label for="profileName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="profileName" th:value="${adminName}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="profileEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="profileEmail" value="admin@nexbus.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="profileContact" class="form-label">Contact</label>
+                            <input type="text" class="form-control" id="profileContact" value="+91 9876543210" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="profilePassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="profilePassword" placeholder="Leave blank to keep current password">
+                        </div>
+                        <button type="submit" class="btn btn-nex-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Analytics Report Modal -->
+    <div class="modal fade" id="scheduleReportModal" tabindex="-1" aria-labelledby="scheduleReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="scheduleReportModalLabel">Schedule Analytics Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="schedule-report-form">
+                        <div class="mb-3">
+                            <label for="reportFrequency" class="form-label">Frequency</label>
+                            <select class="form-control" id="reportFrequency" required>
+                                <option value="Daily">Daily</option>
+                                <option value="Weekly">Weekly</option>
+                                <option value="Monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reportRecipientEmail" class="form-label">Recipient Email</label>
+                            <input type="email" class="form-control" id="reportRecipientEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reportType" class="form-label">Report Type</label>
+                            <select class="form-control" id="reportType" required>
+                                <option value="Analytics Summary">Analytics Summary</option>
+                                <option value="Bookings">Bookings</option>
+                                <option value="Revenue">Revenue</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-nex-primary">Schedule</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

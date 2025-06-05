@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: content}">
+<div class="analytics-container">
+    <h2 class="nex-brand-gradient">System Analytics</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="btn-group">
+            <button class="btn btn-outline-primary">Today</button>
+            <button class="btn btn-outline-primary">This Week</button>
+            <button class="btn btn-outline-primary">This Month</button>
+            <button class="btn btn-outline-primary">This Year</button>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-outline-primary">Export</button>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#scheduleReportModal">Schedule Report</button>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h5>Booking Trends</h5>
+            <div class="card-body">
+                <canvas id="booking-trends-chart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h5>Revenue Analysis</h5>
+            <div class="card-body">
+                <canvas id="revenue-analysis-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Top Routes</h5>
+            <div class="card-body">
+                <ul id="top-routes-list">
+                    <li>Loading...</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h5>Bus Utilization</h5>
+            <div class="card-body">
+                <canvas id="bus-utilization-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Bus Maintenance</h5>
+            <div class="card-body">
+                <ul id="maintenance-schedule-list">
+                    <li>Loading...</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

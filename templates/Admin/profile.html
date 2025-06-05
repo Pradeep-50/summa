@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: content}">
+<div class="profile-container">
+    <h2 class="nex-brand-gradient">Admin Profile</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <button class="btn btn-nex-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card-body">
+                <h5 th:text="${adminName}"></h5>
+                <p th:text="${adminRole}"></p>
+                <h6>Details</h6>
+                <p>Email: <span th:text="'admin@nexbus.com'"></span></p>
+                <p>Contact: +91 9876543210</p>
+                <p>Joined: 2025-01-01</p>
+                <h6>Recent Activities</h6>
+                <ul>
+                    <li>Logged in - 5 mins ago</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

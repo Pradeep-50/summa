@@ -1,0 +1,134 @@
+#rightPanel_section {
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+input, select {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 8px;
+    width: 100%;
+}
+
+.right-panel, .right-paneltwo {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.greyText {
+    color: #666;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.profiledetails {
+    margin-top: 10px;
+}
+
+.editbutton {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.editbutton button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+#edittap {
+    background-color: #007bff;
+    color: white;
+}
+
+#edittap:hover {
+    background-color: #0056b3;
+}
+
+#savebutton {
+    background-color: #28a745;
+    color: white;
+}
+
+#savebutton:hover {
+    background-color: #218838;
+}
+
+#cancelbutton {
+    background-color: #dc3545;
+    color: white;
+}
+
+#cancelbutton:hover {
+    background-color: #c82333;
+}
+
+.userdetail1, .userdetail2, .userdetail3 {
+    margin-bottom: 15px;
+}
+
+.inputName {
+    display: flex;
+    gap: 20px;
+}
+
+.inputName > div {
+    flex: 1;
+}
+
+.userdetail2 select {
+    width: 200px;
+}
+
+.userdetail3 {
+    display: flex;
+    gap: 20px;
+}
+
+.userdetail3 > div {
+    flex: 1;
+}
+
+fieldset {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 15px 0;
+}
+
+legend {
+    font-size: 14px;
+    color: #333;
+}
+
+label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+@media screen and (max-width: 868px) {
+    .leftNav {
+        display: none;
+    }
+    #headerBlock {
+        justify-content: center;
+        align-items: center;
+    }
+    .inputName, .userdetail3 {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .userdetail2 select {
+        width: 100%;
+    }
+}

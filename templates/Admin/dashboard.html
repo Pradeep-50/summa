@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout}">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <!-- Sidebar -->
+        <div class="sidebar fixed top-0 left-0 h-full w-64 bg-light shadow-lg" th:classappend="${sidebarHidden} ? 'sidebar-hidden'">
+            <div class="p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-4 fw-bold nex-brand-gradient">Nex-Bus</span>
+                </div>
+            </div>
+            <nav class="mt-4">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a th:href="@{/dashboard}" class="nav-link active text-dark bg-light">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/dashboard/routes}" class="nav-link text-dark">
+                            <i class="fas fa-map-signs me-2"></i>Routes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/dashboard/buses}" class="nav-link text-dark">
+                            <i class="fas fa-bus me-2"></i>Buses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/dashboard/passengers}" class="nav-link text-dark">
+                            <i class="fas fa-users me-2"></i>Passengers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/dashboard/operators}" class="nav-link text-dark">
+                            <i class="fas fa-user-tie me-2"></i>Operators
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/dashboard/bookings}" class="nav-link text-dark">
+                            <i class="fas fa-ticket-alt me-2"></i>Bookings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/dashboard/support}" class="nav-link text-dark">
+                            <i class="fas fa-headset me-2"></i>Support Tickets
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/dashboard/analytics}" class="nav-link text-dark">
+                            <i class="fas fa-chart-line me-2"></i>Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/dashboard/audit}" class="nav-link text-dark">
+                            <i class="fas fa-history me-2"></i>Audit Logs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/dashboard/profile}" class="nav-link text-dark">
+                            <i class="fas fa-user me-2"></i>Profile
+                        </a>
+                    </li>
+                </ul>
+                <div class="p-4 border-top">
+                    <div class="d-flex align-items-center mb-2">
+                        <span th:text="${adminName} + ' (' + ${adminRole} + ')'">Nex Admin (Super Admin)</span>
+                    </div>
+                    <a th:href="@{/logout}" class="text-danger">Sign out</a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1" th:classappend="${sidebarHidden} ? 'ml-0' : 'ml-64'">
+            <div class="p-4">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <button id="toggleSidebar" class="text-muted">
+                        <i class="fas fa-bars fa-lg"></i>
+                    </button>
+                    <div class="d-flex space-x-2">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">Global Search</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#notificationsModal">Notifications</button>
+                    </div>
+                </div>
+
+                <!-- Dashboard Overview -->
+                <h2 class="fs-4 fw-bold mb-4">Dashboard Overview</h2>
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card shadow-sm p-3">
+                            <h5>Total Passengers</h5>
+                            <p class="fs-3 fw-bold" th:text="${metrics.totalPassengers ?: 0}">0</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card shadow-sm p-3">
+                            <h5>Total Bookings</h5>
+                            <p class="fs-3 fw-bold" th:text="${metrics.totalBookings ?: 0}">0</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card shadow-sm p-3">
+                            <h5>Total Routes</h5>
+                            <p class="fs-3 fw-bold" th:text="${metrics.totalRoutes ?: 0}">0</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card shadow-sm p-3">
+                            <h5>Total Revenue</h5>
+                            <p class="fs-3 fw-bold" th:text="'₹' + ${metrics.totalRevenue ?: 0}">₹0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm p-3 mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>Recent Bookings</h5>
+                                <a th:href="@{/dashboard/bookings}" class="text-primary">View All</a>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Booking ID</th>
+                                        <th>Passenger</th>
+                                        <th>Route</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="booking : ${recentBookings}">
+                                        <td th:text="${booking.id}">B001</td>
+                                        <td th:text="${booking.passenger.name}">John Doe</td>
+                                        <td th:text="${booking.route.source} + ' to ' + ${booking.route.destination}">Chennai to Salem</td>
+                                        <td th:text="${booking.status}">Confirmed</td>
+                                    </tr>
+                                    <tr th:unless="${#lists.isEmpty(recentBookings)}">
+                                        <td colspan="4" class="text-center text-muted">No recent bookings</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm p-3 mb-4">
+                            <h5>System Alerts (<span th:text="${#lists.size(systemAlerts)}">0</span> New)</h5>
+                            <div th:each="alert : ${systemAlerts}">
+                                <p th:text="${alert.message} + ' (' + ${alert.timestamp} + ')'">Alert: Bus #B101 maintenance due (1 hour ago)</p>
+                            </div>
+                            <p th:unless="${#lists.isEmpty(systemAlerts)}" class="text-muted">No new alerts</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm p-3 mb-4">
+                            <h5>Revenue Trend</h5>
+                            <div class="bg-light" style="height: 200px;">
+                                <!-- Placeholder for chart -->
+                                <p class="text-center text-muted pt-5">Chart will be rendered here</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm p-3 mb-4">
+                            <h5>Recent Activity</h5>
+                            <div th:each="activity : ${recentActivity}">
+                                <p th:text="${activity.timestamp} + ': ' + ${activity.details}">2025-05-28: New operator registered</p>
+                            </div>
+                            <p th:unless="${#lists.isEmpty(recentActivity)}" class="text-muted">No recent activity</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Global Search Modal -->
+                <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="searchModalLabel">Global Search</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" class="form-control mb-3" placeholder="Search..." id="searchInput">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <button class="btn btn-outline-secondary" onclick="filterSearch('all')">All</button>
+                                    <button class="btn btn-outline-secondary" onclick="filterSearch('routes')">Routes</button>
+                                    <button class="btn btn-outline-secondary" onclick="filterSearch('buses')">Buses</button>
+                                    <button class="btn btn-outline-secondary" onclick="filterSearch('passengers')">Passengers</button>
+                                    <button class="btn btn-outline-secondary" onclick="filterSearch('bookings')">Bookings</button>
+                                </div>
+                                <h5>Recent Searches</h5>
+                                <div id="recentSearches">
+                                    <p class="text-muted">No recent searches</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Modal -->
+                <div class="modal fade" id="notificationsModal" tabindex="-1" aria-labelledby="notificationsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="notificationsModalLabel">Notifications</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <button class="btn btn-outline-secondary" onclick="filterNotifications('all')">All</button>
+                                    <button class="btn btn-outline-secondary" onclick="filterNotifications('unread')">Unread</button>
+                                    <button class="btn btn-outline-secondary" onclick="filterNotifications('system')">System</button>
+                                    <button class="btn btn-outline-secondary" onclick="filterNotifications('alerts')">Alerts</button>
+                                </div>
+                                <div id="notificationsList">
+                                    <div th:each="notification : ${notifications}">
+                                        <p th:text="${notification.message} + ' (' + ${notification.timestamp} + ')'">System: New operator registered (5 mins ago)</p>
+                                    </div>
+                                    <p th:unless="${#lists.isEmpty(notifications)}" class="text-muted">No notifications</p>
+                                </div>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <button class="btn btn-primary" onclick="markAllRead()">Mark All Read</button>
+                                    <button class="btn btn-danger" onclick="clearAllNotifications()">Clear All</button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
