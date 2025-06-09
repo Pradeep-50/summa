@@ -1,42 +1,65 @@
-package com.nexbus.nexbus_backend.controller;
+package com.nexbus.frontend.controller;
 
-import com.nexbus.nexbus_backend.dto.PassengerDTO;
-import com.nexbus.nexbus_backend.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nexbus.frontend.dto.PassengerDTO;
+import com.nexbus.frontend.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/passengers")
+@Controller
 public class PassengerController {
-
-    private static final Logger logger = LoggerFactory.getLogger(PassengerController.class);
+    private final PassengerService passengerService;
 
     @Autowired
-    private UserService userService;
-
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('BUSOPERATOR')")
-    public List<PassengerDTO> getAllPassengers() {
-        logger.debug("Fetching all passengers");
-        List<PassengerDTO> passengers = userService.findAllPassengers();
-        logger.info("Retrieved {} passengers", passengers.size());
-        return passengers;
+    public PassengerController(PassengerService passengerService) {
+        this.passengerService = passengerService;
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('BUSOPERATOR')")
-    public PassengerDTO getPassengerById(@PathVariable Integer id) {
-        logger.debug("Fetching passenger with ID: {}", id);
-        PassengerDTO passenger = userService.findPassengerById(id);
-        logger.info("Found passenger with ID: {}", id);
-        return passenger;
+    @GetMapping("/api/passengers")
+    public String showPassengers(Model model, HttpSession session) {
+        String authToken = (String) session.getAttribute("authToken");
+        if (authToken == null) {
+            return "redirect:/Admin/Login";
+        }
+        model.addAttribute("pageTitle", "Passengers");
+        model.addAttribute("adminName", session.getAttribute("adminName"));
+        model.addAttribute("adminRole", session.getAttribute("adminRole"));
+        model.addAttribute("authToken", authToken);
+        try {
+            model.addAttribute("passengers", passengerService.getAllPassengers());
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to fetch passengers: " + e.getMessage());
+        }
+        return "Admin/Passengers";
+    }
+
+    @PostMapping("/api/passengers")
+    public String addPassenger(@ModelAttribute PassengerDTO passengerDTO, Model model, HttpSession session) {
+        if (session.getAttribute("authToken") == null) {
+            return "redirect:/Admin/Login";
+        }
+        try {
+            passengerService.createPassenger(passengerDTO);
+            return "redirect:/api/passengers";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to add passenger: " + e.getMessage());
+            return "Admin/Passengers";
+        }
+    }
+
+    @PostMapping("/api/passengers/{id}/delete")
+    public String deletePassenger(@PathVariable Integer id, Model model, HttpSession session) {
+        if (session.getAttribute("authToken") == null) {
+            return "redirect:/Admin/Login";
+        }
+        try {
+            passengerService.deletePassenger(id);
+            return "redirect:/api/passengers";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to delete passenger: " + e.getMessage());
+            return "Admin/Passengers";
+        }
     }
 }

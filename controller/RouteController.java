@@ -1,25 +1,15 @@
-package com.nexbus.nexbus_backend.controller;
+package com.nexbus.frontend.controller;
 
-import com.nexbus.nexbus_backend.dto.RouteDTO;
-import com.nexbus.nexbus_backend.security.CustomUserDetails;
-import com.nexbus.nexbus_backend.service.RouteService;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nexbus.frontend.dto.RouteDTO;
+import com.nexbus.frontend.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/routes")
+@Controller
 public class RouteController {
-
-    private static final Logger logger = LoggerFactory.getLogger(RouteController.class);
     private final RouteService routeService;
 
     @Autowired
@@ -27,59 +17,49 @@ public class RouteController {
         this.routeService = routeService;
     }
 
-    @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'BUSOPERATOR', 'CUSTOMER')")
-    public ResponseEntity<List<RouteDTO>> getAllRoutes(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        logger.debug("User ID: {}, Username: {}, Authorities: {}", 
-            userDetails.getUserId(), userDetails.getUsername(), userDetails.getAuthorities());
-        if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("BUSOPERATOR"))) {
-            logger.debug("Fetching routes for BUSOPERATOR with userId: {}", userDetails.getUserId());
-            return ResponseEntity.ok(routeService.findByOperatorId(userDetails.getUserId()));
+    @GetMapping("/api/routes")
+    public String showRoutes(Model model, HttpSession session) {
+        String authToken = (String) session.getAttribute("authToken");
+        if (authToken == null) {
+            return "redirect:/Admin/Login";
         }
-        logger.debug("Fetching all routes for user with role: {}", userDetails.getAuthorities());
-        return ResponseEntity.ok(routeService.findAll());
-    }
-
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'BUSOPERATOR', 'CUSTOMER')")
-    public ResponseEntity<RouteDTO> getRouteById(
-            @PathVariable @Min(value = 1, message = "ID must be positive") Integer id,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        logger.debug("User ID: {}, Username: {}, Authorities: {} for route ID: {}", 
-            userDetails.getUserId(), userDetails.getUsername(), userDetails.getAuthorities(), id);
-        if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("BUSOPERATOR"))) {
-            RouteDTO route = routeService.findById(id);
-            if (!routeService.isRouteAccessibleByOperator(id, userDetails.getUserId())) {
-                logger.warn("Access denied for BUSOPERATOR userId: {} to routeId: {}", userDetails.getUserId(), id);
-                throw new IllegalStateException("Not authorized to access this route");
-            }
-            return ResponseEntity.ok(route);
+        model.addAttribute("pageTitle", "Routes");
+        model.addAttribute("adminName", session.getAttribute("adminName"));
+        model.addAttribute("adminRole", session.getAttribute("adminRole"));
+        model.addAttribute("authToken", authToken);
+        try {
+            model.addAttribute("routes", routeService.getAllRoutes());
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to fetch routes: " + e.getMessage());
         }
-        return ResponseEntity.ok(routeService.findById(id));
+        return "Operator/OpertorRoutes";
     }
 
-    @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<RouteDTO> createRoute(@Valid @RequestBody RouteDTO routeDTO) {
-        logger.debug("Creating route: {}", routeDTO.getRouteName());
-        return ResponseEntity.status(201).body(routeService.save(routeDTO));
+    @PostMapping("/api/routes")
+    public String addRoute(@ModelAttribute RouteDTO routeDTO, Model model, HttpSession session) {
+        if (session.getAttribute("authToken") == null) {
+            return "redirect:/login";
+        }
+        try {
+            routeService.createRoute(routeDTO);
+            return "redirect:/api/routes";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to add route: " + e.getMessage());
+            return "routes";
+        }
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<RouteDTO> updateRoute(
-            @PathVariable @Min(value = 1, message = "ID must be positive") Integer id,
-            @Valid @RequestBody RouteDTO routeDTO) {
-        logger.debug("Updating route with id: {}", id);
-        return ResponseEntity.ok(routeService.update(id, routeDTO));
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Void> deleteRoute(
-            @PathVariable @Min(value = 1, message = "ID must be positive") Integer id) {
-        logger.debug("Deleting route with id: {}", id);
-        routeService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    @PostMapping("/api/routes/{id}/delete")
+    public String deleteRoute(@PathVariable Integer id, Model model, HttpSession session) {
+        if (session.getAttribute("authToken") == null) {
+            return "redirect:/login";
+        }
+        try {
+            routeService.deleteRoute(id);
+            return "redirect:/api/routes";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to delete route: " + e.getMessage());
+            return "routes";
+        }
     }
 }

@@ -1,69 +1,65 @@
-package com.nexbus.nexbus_backend.controller;
+package com.nexbus.frontend.controller;
 
-   import com.nexbus.nexbus_backend.dto.SupportDTO;
-   import com.nexbus.nexbus_backend.service.SupportService;
-   import org.slf4j.Logger;
-   import org.slf4j.LoggerFactory;
-   import org.springframework.http.ResponseEntity;
-   import org.springframework.security.access.prepost.PreAuthorize;
-   import org.springframework.web.bind.annotation.*;
+import com.nexbus.frontend.dto.SupportDTO;
+import com.nexbus.frontend.service.SupportService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
 
-   import java.util.List;
+@Controller
+public class SupportController {
+    private final SupportService supportService;
 
-   @RestController
-   @RequestMapping("/api/support")
-   public class SupportController {
+    @Autowired
+    public SupportController(SupportService supportService) {
+        this.supportService = supportService;
+    }
 
-       private static final Logger logger = LoggerFactory.getLogger(SupportController.class);
+    @GetMapping("/api/support")
+    public String showSupport(Model model, HttpSession session) {
+        String authToken = (String) session.getAttribute("authToken");
+        if (authToken == null) {
+            return "redirect:/Admin/Login";
+        }
+        model.addAttribute("pageTitle", "Support Tickets");
+        model.addAttribute("adminName", session.getAttribute("adminName"));
+        model.addAttribute("adminRole", session.getAttribute("adminRole"));
+        model.addAttribute("authToken", authToken);
+        try {
+            model.addAttribute("tickets", supportService.getAllTickets());
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to fetch support tickets: " + e.getMessage());
+        }
+        return "Admin/Support";
+    }
 
-       private final SupportService supportService;
+    @PostMapping("/api/support")
+    public String addTicket(@ModelAttribute SupportDTO supportDTO, Model model, HttpSession session) {
+        if (session.getAttribute("authToken") == null) {
+            return "redirect:/Admin/Login";
+        }
+        try {
+            supportService.createTicket(supportDTO);
+            return "redirect:/api/support";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to add support ticket: " + e.getMessage());
+            return "Admin/Support";
+        }
+    }
 
-       public SupportController(SupportService supportService) {
-           this.supportService = supportService;
-       }
-
-       @GetMapping
-       @PreAuthorize("hasAnyAuthority('ADMIN', 'CUSTOMER')")
-       public ResponseEntity<List<SupportDTO>> getAllSupportTickets() {
-           logger.debug("Fetching all support tickets");
-           List<SupportDTO> tickets = supportService.findAll();
-           logger.info("Retrieved {} support tickets", tickets.size());
-           return ResponseEntity.ok(tickets);
-       }
-
-       @GetMapping("/{id}")
-       @PreAuthorize("hasAnyAuthority('ADMIN', 'CUSTOMER')")
-       public ResponseEntity<SupportDTO> getSupportTicketById(@PathVariable Integer id) {
-           logger.debug("Fetching support ticket with ID: {}", id);
-           SupportDTO ticket = supportService.findById(id);
-           logger.info("Retrieved support ticket with ID: {}", id);
-           return ResponseEntity.ok(ticket);
-       }
-
-       @PostMapping
-       @PreAuthorize("hasAnyAuthority('ADMIN', 'CUSTOMER')")
-       public ResponseEntity<SupportDTO> createSupportTicket(@RequestBody SupportDTO supportDTO) {
-           logger.debug("Creating new support ticket");
-           SupportDTO createdTicket = supportService.create(supportDTO);
-           logger.info("Created support ticket with ID: {}", createdTicket.getSupportId());
-           return ResponseEntity.ok(createdTicket);
-       }
-
-       @PutMapping("/{id}")
-       @PreAuthorize("hasAuthority('ADMIN')")
-       public ResponseEntity<SupportDTO> updateSupportTicket(@PathVariable Integer id, @RequestBody SupportDTO supportDTO) {
-           logger.debug("Updating support ticket with ID: {}", id);
-           SupportDTO updatedTicket = supportService.update(id, supportDTO);
-           logger.info("Updated support ticket with ID: {}", id);
-           return ResponseEntity.ok(updatedTicket);
-       }
-
-       @DeleteMapping("/{id}")
-       @PreAuthorize("hasAuthority('ADMIN')")
-       public ResponseEntity<Void> deleteSupportTicket(@PathVariable Integer id) {
-           logger.debug("Deleting support ticket with ID: {}", id);
-           supportService.delete(id);
-           logger.info("Deleted support ticket with ID: {}", id);
-           return ResponseEntity.noContent().build();
-       }
-   }
+    @PostMapping("/api/support/{id}/delete")
+    public String deleteTicket(@PathVariable Integer id, Model model, HttpSession session) {
+        if (session.getAttribute("authToken") == null) {
+            return "redirect:/Admin/Login";
+        }
+        try {
+            supportService.deleteTicket(id);
+            return "redirect:/api/support";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to delete support ticket: " + e.getMessage());
+            return "Admin/Support";
+        }
+    }
+}

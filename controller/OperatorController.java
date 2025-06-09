@@ -1,46 +1,65 @@
-package com.nexbus.nexbus_backend.controller;
+package com.nexbus.frontend.controller;
 
-import com.nexbus.nexbus_backend.dto.BusDTO;
-import com.nexbus.nexbus_backend.dto.OperatorDTO;
-import com.nexbus.nexbus_backend.service.OperatorService;
+import com.nexbus.frontend.dto.OperatorDTO;
+import com.nexbus.frontend.service.OperatorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/bus-operators")
+@Controller
 public class OperatorController {
+    private final OperatorService operatorService;
 
     @Autowired
-    private OperatorService operatorService;
-
-    @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<OperatorDTO> create(@RequestBody OperatorDTO dto) {
-        OperatorDTO saved = operatorService.save(dto);
-        return ResponseEntity.ok(saved);
+    public OperatorController(OperatorService operatorService) {
+        this.operatorService = operatorService;
     }
 
-    @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<OperatorDTO>> getAll() {
-        return ResponseEntity.ok(operatorService.findAll());
+    @GetMapping("/api/operators")
+    public String showOperators(Model model, HttpSession session) {
+        String authToken = (String) session.getAttribute("authToken");
+        if (authToken == null) {
+            return "redirect:Operator/index1";
+        }
+        model.addAttribute("pageTitle", "Operators");
+        model.addAttribute("adminName", session.getAttribute("adminName"));
+        model.addAttribute("adminRole", session.getAttribute("adminRole"));
+        model.addAttribute("authToken", authToken);
+        try {
+            model.addAttribute("operators", operatorService.getAllOperators());
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to fetch operators: " + e.getMessage());
+        }
+        return "Operator/Operators";
     }
 
-    @GetMapping("/{operatorId}/buses")
-    @PreAuthorize("hasAnyAuthority('BUSOPERATOR', 'ADMIN')")
-    public ResponseEntity<List<BusDTO>> getBusesByOperatorId(
-            @PathVariable Integer operatorId,
-            Authentication authentication) {
-        String email = authentication.getName();
-        boolean isAdmin = authentication.getAuthorities().stream()
-            .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
-        Integer userId = operatorService.findById(operatorId).getUserId();
-        List<BusDTO> buses = operatorService.findBusesByOperatorId(operatorId, userId, isAdmin);
-        return ResponseEntity.ok(buses);
+    @PostMapping("/api/operators")
+    public String addOperator(@ModelAttribute OperatorDTO operatorDTO, Model model, HttpSession session) {
+        if (session.getAttribute("authToken") == null) {
+            return "redirect:/Operator/index1";
+        }
+        try {
+            operatorService.createOperator(operatorDTO);
+            return "redirect:/api/operators";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to add operator: " + e.getMessage());
+            return "Operator/Operators";
+        }
+    }
+
+    @PostMapping("/api/operators/{id}/delete")
+    public String deleteOperator(@PathVariable Integer id, Model model, HttpSession session) {
+        if (session.getAttribute("authToken") == null) {
+            return "redirect:/Operators/index1";
+        }
+        try {
+            operatorService.deleteOperator(id);
+            return "redirect:/api/operators";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to delete operator: " + e.getMessage());
+            return "Operators/Operators";
+        }
     }
 }
